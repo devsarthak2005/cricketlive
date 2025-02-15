@@ -1,41 +1,57 @@
-package com.myproject.cricketlivescore.entity;
+package com.myproject.cricketlivescore.model;
+
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name="matches")
+@Table(name = "matches")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String teamA;
-    private String teamB;
-    private int overs;
-    private String status;
+    private String matchName;
+    private int scoreTeamA;
+    private int scoreTeamB;
+    private int TotalRuns;
+    private int TotalWickets;
 
+    private LocalDateTime matchTime;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private MatchStatus status;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "team1_id")
+    private Team team1;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    @ManyToOne
+    @JoinColumn(name = "team2_id")
+    private Team team2;
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "tournament_id", referencedColumnName = "id")
+    private Tournament tournament;
+
+    @ManyToMany
+    @JoinTable(
+            name = "match_teams",
+            joinColumns = @JoinColumn(name = "match_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id")
+    )
+    private Set<Team> teams;
+
 
 }

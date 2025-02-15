@@ -1,14 +1,16 @@
 package com.myproject.cricketlivescore.repository;
 
-import com.myproject.cricketlivescore.entity.Match;
+import com.myproject.cricketlivescore.model.Match;
+import com.myproject.cricketlivescore.model.MatchStatus;
+import com.myproject.cricketlivescore.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface MatchRepository extends JpaRepository<Match, Long>
-{
-    List<Match> findByStatus(String status);
-    Optional<Match> findById(Long id);
-
+@Repository
+public interface MatchRepository extends JpaRepository<Match, Long> {
+    List<Match> findByCreatedBy(User user);
+    List<Match> findByStatus(MatchStatus matchStatus);
 }
+

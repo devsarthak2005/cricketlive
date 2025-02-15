@@ -20,7 +20,8 @@ public class MatchHistoryService {
         MatchHistory history = new MatchHistory();
         history.setMatch(match);
         history.setWinnerTeam(winnerTeam);
-        history.setTotalRuns(match.getTotalRuns());
+        history.setTotalRuns(match
+                .getTotalRuns());
         history.setTotalWickets(match.getTotalWickets());
 
         Player playerOfTheMatch = playerOfTheMatchService.getPlayerOfTheMatch(match.getId());
