@@ -31,7 +31,7 @@ public class LiveScoreHandler extends TextWebSocketHandler {
         Long matchId = Long.parseLong(message.getPayload());
         Optional<Match> match = matchService.getMatchById(matchId);
 
-        if (match != null) {
+        if (match.isPresent()) {
             String matchData = objectMapper.writeValueAsString(match);
             session.sendMessage(new TextMessage(matchData));
         }

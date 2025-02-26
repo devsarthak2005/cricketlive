@@ -1,5 +1,7 @@
 package com.myproject.cricketlivescore.service;
 
+import com.myproject.cricketlivescore.dto.MatchRequest;
+import com.myproject.cricketlivescore.dto.MatchUpdateRequest;
 import com.myproject.cricketlivescore.model.Match;
 import com.myproject.cricketlivescore.model.MatchStatus;
 import com.myproject.cricketlivescore.model.Role;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +24,9 @@ public class MatchService {
     @Autowired
     private UserRepository userRepository;
 
-    public Match createMatch(Match match, String email) {
+    private MatchRequest matchRequest;
+
+    public Match createMatch(Match match,String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -29,9 +34,21 @@ public class MatchService {
             throw new RuntimeException("Only premium users can create matches");
         }
 
-        match.setCreatedBy(user);
+        match.setMatchTime(LocalDateTime.parse(matchRequest.getMatchDate()));
+        match.setStatus(MatchStatus.PENDING);
         return matchRepository.save(match);
     }
+
+    public void updateMatch(Long id, MatchUpdateRequest request) {
+        Match match = matchRepository.findById(request.getMatchId())
+                .orElseThrow(() -> new RuntimeException("Match not found"));
+
+        request.setStatus(request.getStatus());
+        request.setScore(request.getScore());
+        matchRepository.save(match);
+    }
+
+
 
     public List<Match> getAllMatches() {
         return matchRepository.findAll();

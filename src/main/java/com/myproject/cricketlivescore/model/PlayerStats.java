@@ -25,6 +25,7 @@ public class PlayerStats {
     private int halfCenturies;
     private int centuries;
     private double strikeRate;
+    private double average;
     private int totalPoints;
 
     public void updateFantasyPoints() {

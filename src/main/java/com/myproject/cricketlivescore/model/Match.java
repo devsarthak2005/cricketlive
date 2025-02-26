@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,6 +47,10 @@ public class Match {
     @JoinColumn(name = "tournament_id", referencedColumnName = "id")
     private Tournament tournament;
 
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ball> balls = new ArrayList<>();
+
+
     @ManyToMany
     @JoinTable(
             name = "match_teams",
@@ -52,6 +58,7 @@ public class Match {
             inverseJoinColumns = @JoinColumn(name = "team_id")
     )
     private Set<Team> teams;
+
 
 
 }
